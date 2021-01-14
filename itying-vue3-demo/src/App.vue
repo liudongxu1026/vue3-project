@@ -1,53 +1,44 @@
 <template>
-  <button v-for="(oneBtn,index) of btnList" :key="index" :class="{'cur': oneBtn.cpnt == nowBtn}" @click="setCpnt(oneBtn.cpnt)">{{oneBtn.name}}</button>
+  <!-- <button v-for="(oneBtn,index) of btnList" :key="index">{{oneBtn.name}}</button> -->
+  <router-link v-for="(oneLink, index) of btnList" :key="index"
+    :to="oneLink.path"
+  >
+    {{oneLink.name}}
+  </router-link>
   <div class="cpnt-coat">
-    <component :is="nowBtn" />
+    <router-view></router-view>
   </div>
 </template>  
 
 <script>
-import ToRefs from './components/ToRefs.vue';
-import Computed from './components/Computed.vue';
-import Readonly from './components/Readonly.vue';
-import WatchEffect from './components/WatchEffect.vue';
-import Watch from './components/Watch.vue';
+
 import { reactive, ref, provide } from 'vue';
 export default {
   name: 'App',
-  components: {
-    ToRefs,
-    Computed,
-    Readonly,
-    WatchEffect,
-    Watch,
-  },
   setup(){
     const ProvideTitle = 'new provide title';
     provide('title', ProvideTitle);
     const btnList = reactive([
-      {name: "toRefs", cpnt: 'ToRefs'},
-      {name: "computed", cpnt: 'Computed'},
-      {name: "readonly", cpnt: 'Readonly'},
-      {name: "watchEffect", cpnt: 'WatchEffect'},
-      {name: "watch", cpnt: 'Watch'},
+      { name: "toRefs", path: '/' },
+      { name: "computed", path: '/computed' },
+      { name: "readonly", path: '/readonly' },
+      { name: "watchEffect", path: '/watchEffect' },
+      { name: "watch", path: '/watch' },
     ]);
-    let nowBtn = ref(btnList[0].cpnt);
-    const setCpnt = function(cpntName){
-      nowBtn.value = cpntName;
-    };
-    return {btnList, nowBtn, setCpnt};
+    return {btnList};
   },
 }
 </script>
 <style scoped>
-  button{
-    margin-right: 10px;
-    padding: 10px;
+  a{
+    padding: 10px;  
+    color: #333;
+    text-decoration: none;
   }
   .cpnt-coat{
     margin-top: 30px;
   }
-  .cur{
+  .router-link-active{
     color: #fff;
     background: #36bf73;
   }
